@@ -1,95 +1,70 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+'use client'
 
-export default function Home() {
+import styles from './page.module.css'
+import React, { useState, useContext } from 'react';
+import { useRouter } from 'next/navigation'
+import { WalletContext } from '@/context/WalletContext'
+
+export default function Login() {
+  const router = useRouter()
+
+  const [pemFile, setPemFile] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Context
+  const { wallet, setWalletInfo } = useContext(WalletContext);
+
+  const handleFileChange = (event) => {
+    console.log("Selecting file...")
+    setPemFile(event.target.files[0]);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setIsLoading(true);
+
+    // Process the .pem file here. For example, read its content.
+    if (pemFile) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        let fileContent = e.target.result;
+        // Send walletAddress and fileContent to your backend
+        const regex = /-----BEGIN PRIVATE KEY for (.{62})-----\s*([\s\S]*?)\s*-----END PRIVATE KEY for \1-----/;
+        const match = fileContent.match(regex);
+        console.log("Match:", match)
+        if (match && match[1] && match[2]) {
+
+          setWalletInfo(match[1], match[2]);
+          router.push('/dashboard');
+        }
+        setIsLoading(false);
+      };
+      reader.readAsText(pemFile);
+
+    } else {
+      // Handle case where no file is selected
+      console.log("No PEM file selected");
+      setIsLoading(false);
+    }
+  };
+
   return (
     <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
+      <div className={styles.loginContainer}>
+        <h1>Login</h1>
+        <form onSubmit={handleSubmit}>
+          <div className={styles.inputGroup}>
+            <label>PEM File:</label>
+            <input
+              type="file"
+              onChange={handleFileChange}
             />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+          </div>
+          <button className={styles.loginButton} type="submit" disabled={isLoading}>
+            {isLoading ? 'Logging in...' : 'Login'}
+          </button>
+        </form>
       </div>
     </main>
-  )
+  );
 }
