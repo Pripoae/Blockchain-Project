@@ -56,3 +56,30 @@
     flex-direction: row;
     flex-wrap: wrap;
 }
+
+.container {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.description {
+    font-size: 16px;
+}
+
+.address {
+    font-size: 14px;
+    color: #888;
+}
+
+.price {
+    font-size: 18px;
+    color: #0070f3;
+
+}

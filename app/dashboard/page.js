@@ -56,7 +56,6 @@ export default function Dashboard() {
                 <div className={styles.info}>
                     <h2>Wallet Information</h2>
                     <p>Wallet Address: {wallet?.walletAddress}</p>
-                    <p>PEM Content: {wallet?.pemContent}</p>
                 </div>
 
                 <button className={styles.requestButton} onClick={handleRequest}>
@@ -67,7 +66,13 @@ export default function Dashboard() {
                 {nfts.map((nft) => {
                     console.log(nft)
                     return (
-                        <NftComponent key={nft.id} nft />
+                        <div key={nft.id} className={styles.container}>
+                            <h1 className={styles.title}>{nft.name}</h1>
+                            <p className={styles.description}>{nft.description}</p>
+                            <p className={styles.address}>{nft.nft_address}</p>
+                            <p className={styles.price}>{nft.price}</p>
+
+                        </div>
                     )
                 })}
             </div>
