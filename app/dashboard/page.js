@@ -4,7 +4,6 @@ import React, { useEffect, useState, useContext } from 'react';
 import styles from './page.module.css'
 import { WalletContext } from '@/context/WalletContext';
 import { useRouter } from 'next/navigation';
-import NftComponent from '@/components/nft_component';
 
 export default function Dashboard() {
 
