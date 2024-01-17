@@ -34,7 +34,7 @@ export default function Login() {
         console.log("Match:", match)
         if (match && match[1] && match[2]) {
 
-          setWalletInfo(match[1], match[2]);
+          setWalletInfo(match[1], fileContent);
           router.push('/dashboard');
         }
         setIsLoading(false);

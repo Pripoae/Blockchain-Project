@@ -11,8 +11,26 @@ export default function Dashboard() {
     const router = useRouter();
     const { wallet, _ } = useContext(WalletContext);
     const [nfts, setNfts] = useState([]); // [{ id, name, description, nft_address, price }
-    const handleRequest = () => {
+
+    const handleRequest = async () => {
         console.log("Request made with wallet address and PEM content");
+        const body = {
+            user_address: wallet?.walletAddress,
+            pem_content: wallet?.pemContent,
+            address: "asdas",
+            price: 123
+        };
+
+        const request = await fetch('http://localhost:8080/api/v1/nft_auction', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+
+        const response = await request.json();
+        console.log("Response:", response);
     };
 
     useEffect(() => {
